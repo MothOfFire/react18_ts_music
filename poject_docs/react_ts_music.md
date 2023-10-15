@@ -18,6 +18,7 @@
   |-- hooks 自定义hook文件夹
   |-- router 路由
   |-- store 状态管理
+     |-- modules 状态数据模块
   |-- utils 工具类
   |-- services 服务请求
   |-- views 当前项目的主要页面
