@@ -7,12 +7,12 @@
   {
     "title": "我的音乐",
     "type": "path",
-    "link": "/mine"
+    "link": "/my"
   },
   {
     "title": "关注",
     "type": "path",
-    "link": "/friend"
+    "link": "/focus"
   },
   {
     "title": "商城",
