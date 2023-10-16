@@ -6,12 +6,16 @@ import {
   useDispatch,
   shallowEqual
 } from 'react-redux';
+import { type } from 'os';
 
 const store = configureStore({
   reducer: {
     counter: counterReducer
   }
 });
+
+// const state = store.getState();
+// type stateType = typeof state;
 
 // 先获取 store.getState 的类型
 type GetStateFnType = typeof store.getState;

@@ -1,11 +1,20 @@
-import { createSlice } from '@reduxjs/toolkit';
+import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+
+interface IState {
+  count: number;
+  message: string;
+  direction: 'left' | 'right' | 'up' | 'down';
+}
+
+const initialState: IState = {
+  count: 100,
+  message: 'Hello World',
+  direction: 'right'
+};
 
 const counterSlice = createSlice({
   name: 'counter',
-  initialState: {
-    count: 100,
-    message: 'Hello World'
-  },
+  initialState,
   reducers: {
     increment: (state) => {
       state.count++;
@@ -16,7 +25,7 @@ const counterSlice = createSlice({
     incrementByAmount: (state, action) => {
       state.count += action.payload;
     },
-    changeMessageAction: (state, { payload }) => {
+    changeMessageAction: (state, { payload }: PayloadAction<string>) => {
       state.message = payload;
     }
   }
