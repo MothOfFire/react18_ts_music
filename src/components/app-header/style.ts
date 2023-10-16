@@ -38,7 +38,6 @@ export const HeaderLeft = styled.div`
         display: block;
         padding: 0 20px;
         color: #ccc;
-        clear: both;
       }
 
       &:last-of-type a {

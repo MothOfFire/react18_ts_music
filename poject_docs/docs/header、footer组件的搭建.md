@@ -246,8 +246,170 @@ root.render(
 ]
 ```
 
+### HeaderLeft
+
 修改 components/app-header/index.tsx 文件
 
 ```tsx
+import React, { memo } from 'react';
+import type { FC, ReactNode } from 'react';
+import { NavLink } from 'react-router-dom';
+import { HeaderWrapper, HeaderLeft, HeaderRight } from './style';
+import headerTitles from '@/assets/data/header-title.json';
 
+interface IProps {
+  children?: ReactNode;
+}
+
+const AppHeader: FC<IProps> = () => {
+  // 定义组件内部的状态
+  // 这种方式刷新时，会将 currentIndex 重新赋值为 0
+  // const [currentIndex, setCurrentIndex] = useState(0);
+
+  // 组件展示逻辑
+  function showItem(item: any) {
+    if (item.type === 'path') {
+      return (
+        <NavLink
+          to={item.link}
+          className={({ isActive }) => {
+            return isActive ? 'active' : undefined;
+          }}
+        >
+          {item.title}
+          <i className="icon sprite_01"></i>
+        </NavLink>
+      );
+    } else {
+      return (
+        <a href={item.link} rel="noreferrer" target="_blank">
+          {item.title}
+        </a>
+      );
+    }
+  }
+
+  return (
+    <HeaderWrapper>
+      <div className="content wrap-v1">
+        <HeaderLeft>
+          <a className="logo sprite_01" href="/">
+            网易云音乐
+          </a>
+          <div className="title-list">
+            {headerTitles.map((item) => {
+              return (
+                <div className="title-item" key={item.title}>
+                  {showItem(item)}
+                </div>
+              );
+            })}
+          </div>
+        </HeaderLeft>
+        <HeaderRight></HeaderRight>
+      </div>
+      <div className="divider"></div>
+    </HeaderWrapper>
+  );
+};
+
+export default memo(AppHeader);
+```
+
+### HeaderRight
+
+安装 antd
+
+```bash
+
+npm install antd
+
+```
+
+antd4.x需要在 assets/css/index.less 文件中引入 antd 样式 `@import '~antd/dist/antd.less';`，antd5.x 已经移除 less 文件
+
+安装 antd-icon
+
+```bash
+
+npm install @ant-design/icons --save
+
+```
+
+修改 components/app-header/index.tsx 文件
+
+```tsx
+import React, { memo } from 'react';
+import type { FC, ReactNode } from 'react';
+import { NavLink } from 'react-router-dom';
+import { Input } from 'antd';
+import { SearchOutlined } from '@ant-design/icons';
+import { HeaderWrapper, HeaderLeft, HeaderRight } from './style';
+import headerTitles from '@/assets/data/header-title.json';
+
+interface IProps {
+  children?: ReactNode;
+}
+
+const AppHeader: FC<IProps> = () => {
+  // 定义组件内部的状态
+  // 这种方式刷新时，会将 currentIndex 重新赋值为 0
+  // const [currentIndex, setCurrentIndex] = useState(0);
+
+  // 组件展示逻辑
+  function showItem(item: any) {
+    if (item.type === 'path') {
+      return (
+        <NavLink
+          to={item.link}
+          className={({ isActive }) => {
+            return isActive ? 'active' : undefined;
+          }}
+        >
+          {item.title}
+          <i className="icon sprite_01"></i>
+        </NavLink>
+      );
+    } else {
+      return (
+        <a href={item.link} rel="noreferrer" target="_blank">
+          {item.title}
+        </a>
+      );
+    }
+  }
+
+  return (
+    <HeaderWrapper>
+      <div className="content wrap-v1">
+        <HeaderLeft>
+          <a className="logo sprite_01" href="/">
+            网易云音乐
+          </a>
+          <div className="title-list">
+            {headerTitles.map((item) => {
+              return (
+                <div className="title-item" key={item.title}>
+                  {showItem(item)}
+                </div>
+              );
+            })}
+          </div>
+        </HeaderLeft>
+        <HeaderRight>
+          <Input
+            className="search"
+            placeholder="音乐/视频/电台/用户"
+            prefix={<SearchOutlined />}
+          />
+          <span className="center">创作者中心</span>
+          <span className="login">登录</span>
+        </HeaderRight>
+      </div>
+      <div className="divider"></div>
+    </HeaderWrapper>
+  );
+};
+
+export default memo(AppHeader);
 ```
