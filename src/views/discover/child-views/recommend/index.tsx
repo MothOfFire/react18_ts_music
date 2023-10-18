@@ -1,8 +1,11 @@
 import React, { memo, useEffect } from 'react';
 import type { FC, ReactNode } from 'react';
+
 import { useAppDispatch } from '@/store';
 import { fetchBannerDataAction } from './store/recommend';
 import TopSwiper from './child-cpns/top-swiper';
+import HotRecommend from './child-cpns/hot-recommend';
+import { RecommendWrapper } from './style';
 
 interface IProps {
   children?: ReactNode;
@@ -16,10 +19,16 @@ const Recommend: FC<IProps> = () => {
   }, []);
 
   return (
-    <div>
+    <RecommendWrapper>
       <TopSwiper />
-      recommend
-    </div>
+      <div className="content wrap-v2">
+        <div className="left">
+          <HotRecommend />
+          left
+        </div>
+        <div className="right">right</div>
+      </div>
+    </RecommendWrapper>
   );
 };
 
