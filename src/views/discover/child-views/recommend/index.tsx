@@ -1,38 +1,24 @@
-import React, { memo, useEffect, useState } from 'react';
+import React, { memo, useEffect } from 'react';
 import type { FC, ReactNode } from 'react';
-import XSRequest from '@/service';
+import { useAppDispatch } from '@/store';
+import { fetchBannerDataAction } from './store/recommend';
+import TopSwiper from './child-cpns/top-swiper';
 
 interface IProps {
   children?: ReactNode;
 }
-// interface IBannersData {
-//   imageUrl: string;
-//   targetId: number;
-//   targetType: number;
-//   titleColor: string;
-//   typeTitle: string;
-//   exclusive: boolean;
-//   encodeId: string;
-//   scm: string;
-//   bannerBizType: string;
-// }
 
 const Recommend: FC<IProps> = () => {
-  // const [banners, setBanners] = useState<IBannersData[]>([]);
-  // 测试网络请求
+  // 发起 action 请求，获取数据
+  const dispatch = useAppDispatch();
   useEffect(() => {
-    XSRequest.get({
-      url: '/banner'
-    }).then((res: any) => {
-      console.log(res);
-      // setBanners(res.banners);
-    });
+    dispatch(fetchBannerDataAction());
   }, []);
+
   return (
     <div>
-      {/* {banners.map((item, index) => {
-        return <div key={index}>{item.imageUrl}</div>;
-      })} */}
+      <TopSwiper />
+      recommend
     </div>
   );
 };
