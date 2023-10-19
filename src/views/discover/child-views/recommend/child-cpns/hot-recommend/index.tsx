@@ -11,9 +11,9 @@ interface IProps {
 }
 
 const HotRecommend: FC<IProps> = () => {
-  const { songState } = useAppSelector(
+  const { HotRecommends } = useAppSelector(
     (state) => ({
-      songState: state.recommend.singerData
+      HotRecommends: state.recommend.hotRecommends
     }),
     shallowEqualApp
   );
@@ -25,7 +25,7 @@ const HotRecommend: FC<IProps> = () => {
         moreLink="/discover/songs"
       ></AreaHeaderV1>
       <div className="recommend-list">
-        {songState.map((item: any) => {
+        {HotRecommends.map((item) => {
           return <SongMenuItem key={item.id} songData={item}></SongMenuItem>;
         })}
       </div>

@@ -15,6 +15,7 @@ const SongMenuItem: FC<IProps> = (props) => {
     <SongMenuItemWrapper>
       <div className="top">
         <img src={formatImageSize(songData.picUrl, 140)} alt={songData.name} />
+        {/* 蒙版 */}
         <div className="cover sprite_cover">
           <div className="info sprite_cover">
             <span>

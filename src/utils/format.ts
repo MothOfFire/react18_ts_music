@@ -1,3 +1,4 @@
+// 格式化播放数
 export function formatCount(count: number) {
   if (count > 100000) {
     return Math.floor(count / 10000) + '万';
@@ -6,6 +7,7 @@ export function formatCount(count: number) {
   }
 }
 
+// 格式化图片
 export function formatImageSize(
   imgUrl: string,
   width: number,

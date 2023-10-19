@@ -12,7 +12,7 @@ import { IPersonalized, IArtist } from '../types';
 // 获取 banners 数据
 export const fetchBannerDataAction = createAsyncThunk('banners', async () => {
   const res = await getBanner();
-  console.log(res);
+  // console.log(res);
   return res.banners;
 });
 
@@ -21,6 +21,7 @@ export const fetchHotRecommendsAction = createAsyncThunk(
   'hotRecommends',
   async (param, { dispatch }) => {
     const res: any = await getHotRecommend(8);
+    console.log(res);
     dispatch(changeHotRecommendsAction(res.result));
   }
 );
