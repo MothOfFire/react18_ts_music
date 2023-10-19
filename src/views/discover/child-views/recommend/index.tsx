@@ -5,11 +5,14 @@ import { useAppDispatch } from '@/store';
 import {
   fetchBannerDataAction,
   fetchHotRecommendsAction,
-  fetchAlbumNewestAction
+  fetchAlbumNewestAction,
+  fetchTopRankingAction,
+  fetchSingerDataAction
 } from './store/recommend';
 import TopSwiper from './child-cpns/top-swiper';
 import HotRecommend from './child-cpns/hot-recommend';
 import NewAlbum from './child-cpns/new-album';
+import TopRanking from './child-cpns/top-ranking';
 import { RecommendWrapper } from './style';
 
 interface IProps {
@@ -23,6 +26,8 @@ const Recommend: FC<IProps> = () => {
     dispatch(fetchBannerDataAction());
     dispatch(fetchHotRecommendsAction());
     dispatch(fetchAlbumNewestAction());
+    dispatch(fetchTopRankingAction());
+    dispatch(fetchSingerDataAction());
   }, []);
 
   return (
@@ -32,6 +37,7 @@ const Recommend: FC<IProps> = () => {
         <div className="left">
           <HotRecommend />
           <NewAlbum />
+          <TopRanking />
         </div>
         <div className="right">right</div>
       </div>

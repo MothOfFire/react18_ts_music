@@ -40,6 +40,22 @@ export const fetchTopRankingAction = createAsyncThunk(
   'topRanking',
   async (arg, { dispatch }) => {
     const rankingIds = [19723756, 3779629, 2884035];
+    // 每个请求单独处理
+    // for (const id of rankingIds) {
+    //   getTopRanking(id).then((res) => {
+    //     switch (id) {
+    //       case 19723756:
+    //         console.log('飙升榜', res);
+    //         break;
+    //       case 3779629:
+    //         console.log('新歌榜', res);
+    //         break;
+    //       case 2884035:
+    //         console.log('热歌榜', res);
+    //         break;
+    //     }
+    //   });
+    // }
     Promise.all(rankingIds.map((id) => getTopRanking(id))).then((ress) => {
       const res = ress.map((res: any) => res.playlist);
       dispatch(changeTopRankingAction(res));
