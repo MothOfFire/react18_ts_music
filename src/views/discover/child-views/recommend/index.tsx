@@ -4,10 +4,12 @@ import type { FC, ReactNode } from 'react';
 import { useAppDispatch } from '@/store';
 import {
   fetchBannerDataAction,
-  fetchHotRecommendsAction
+  fetchHotRecommendsAction,
+  fetchAlbumNewestAction
 } from './store/recommend';
 import TopSwiper from './child-cpns/top-swiper';
 import HotRecommend from './child-cpns/hot-recommend';
+import NewAlbum from './child-cpns/new-album';
 import { RecommendWrapper } from './style';
 
 interface IProps {
@@ -20,6 +22,7 @@ const Recommend: FC<IProps> = () => {
   useEffect(() => {
     dispatch(fetchBannerDataAction());
     dispatch(fetchHotRecommendsAction());
+    dispatch(fetchAlbumNewestAction());
   }, []);
 
   return (
@@ -28,7 +31,7 @@ const Recommend: FC<IProps> = () => {
       <div className="content wrap-v2">
         <div className="left">
           <HotRecommend />
-          left
+          <NewAlbum />
         </div>
         <div className="right">right</div>
       </div>
