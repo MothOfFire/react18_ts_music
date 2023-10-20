@@ -13,6 +13,9 @@ import TopSwiper from './child-cpns/top-swiper';
 import HotRecommend from './child-cpns/hot-recommend';
 import NewAlbum from './child-cpns/new-album';
 import TopRanking from './child-cpns/top-ranking';
+import UserLogin from './child-cpns/user-login';
+import SettleSingers from './child-cpns/settle-singers';
+import HotAnchor from './child-cpns/hot-anchor';
 import { RecommendWrapper } from './style';
 
 interface IProps {
@@ -39,7 +42,11 @@ const Recommend: FC<IProps> = () => {
           <NewAlbum />
           <TopRanking />
         </div>
-        <div className="right">right</div>
+        <div className="right">
+          <UserLogin />
+          <SettleSingers />
+          <HotAnchor />
+        </div>
       </div>
     </RecommendWrapper>
   );

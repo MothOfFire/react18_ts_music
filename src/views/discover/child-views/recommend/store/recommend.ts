@@ -67,7 +67,7 @@ export const fetchTopRankingAction = createAsyncThunk(
 export const fetchSingerDataAction = createAsyncThunk(
   'singer',
   async (arg, { dispatch }) => {
-    const res: any = await getSingerData();
+    const res: any = await getSingerData(5);
     dispatch(changeSingerDataAction(res.artists));
   }
 );

@@ -27,5 +27,5 @@ export const getTopRanking = (id: number) =>
   XSRequest.get({ url: '/playlist/detail', params: { id } });
 
 // 入驻歌手
-export const getSingerData = (limit = 5) =>
+export const getSingerData = (limit = 30) =>
   XSRequest.get({ url: '/artist/list', params: { limit } });
