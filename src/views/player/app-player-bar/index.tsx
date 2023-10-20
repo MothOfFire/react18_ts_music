@@ -1,6 +1,7 @@
-import React, { memo } from 'react';
+import React, { memo, useState, useRef, useEffect } from 'react';
 import type { FC, ReactNode } from 'react';
-import { Slider } from 'antd';
+import { Slider, message, Tooltip } from 'antd';
+import { Link } from 'react-router-dom';
 
 import {
   PlayerBarWrapper,
@@ -8,40 +9,173 @@ import {
   BarPlayerInfo,
   BarOperator
 } from './style';
-import { Link } from 'react-router-dom';
+import { useAppSelector, shallowEqualApp, useAppDispatch } from '@/store';
+import { formatImageSize, formatTime } from '@/utils/format';
+import { getSongPlay } from '@/utils';
+import { changeLyricIndexAction } from '../store/player';
 
 interface IProps {
   children?: ReactNode;
 }
 
 const AppPlayerBar: FC<IProps> = () => {
+  // 定义组件内部的数据
+  const [isPlay, setIsPlay] = useState(false);
+  const [progress, setProgress] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [currentTime, setCurrentTime] = useState(0);
+  // isSlider 记录是否处于拖拽状态
+  const [isSlider, setSlider] = useState(false);
+  const [modeText, setModeText] = useState('顺序播放');
+  const audioRef = useRef<HTMLAudioElement>(null);
+
+  // 获取数据
+  const { currentSong, lyrics, lyricIndex } = useAppSelector(
+    (state) => ({
+      currentSong: state.player.currentSong,
+      lyrics: state.player.lyrics,
+      lyricIndex: state.player.lyricIndex
+    }),
+    shallowEqualApp
+  );
+  const dispatch = useAppDispatch();
+
+  // 组件内的副作用操作
+  // useEffect(() => {
+  //   switch (playMode) {
+  //     case 0:
+  //       return setModeText('顺序播放')
+  //     case 1:
+  //       return setModeText('随机播放')
+  //     case 2:
+  //       return setModeText('单曲循环')
+  //     default:
+  //       return setModeText('顺序播放')
+  //   }
+  // }, [playMode]);
+  useEffect(() => {
+    // 播放音乐
+    audioRef.current!.src = getSongPlay(currentSong.id);
+    audioRef.current
+      ?.play()
+      .then(() => {
+        setIsPlay(true);
+        console.log('歌曲播放成功');
+      })
+      .catch((err) => {
+        setIsPlay(false);
+        console.log('歌曲播放失败', err);
+      });
+    // 获取总时长
+    setDuration(currentSong.dt);
+  }, [currentSong]);
+
+  // 事件处理函数
+  // 音乐播放进度处理
+  function handleTimeUpdate() {
+    // console.log('handleHimeUpdate', audioRef.current?.currentTime);
+    // 获取当前的播放时间
+    const currentProgressTime = audioRef.current!.currentTime;
+    const currentTime = currentProgressTime! * 1000;
+    setCurrentTime(currentTime);
+    // 歌曲进度处理
+    if (!isSlider) {
+      const progress = (currentTime / duration) * 100;
+      setProgress(progress);
+      setCurrentTime(currentTime);
+    }
+    // 根据时间匹配对应歌词
+    let index = lyrics.length - 1;
+    for (let i = 0; i < lyrics.length; i++) {
+      const lyric: any = lyrics[i];
+      if (lyric.time > currentTime) {
+        index = i - 1;
+        break;
+      }
+    }
+    // 匹配上对应的歌词的index
+    if (lyricIndex === index || index === -1) return;
+    dispatch(changeLyricIndexAction(index));
+    // console.log(lyrics[index]?.text);
+    // 展示对应的歌词
+    message.open({
+      content: (lyrics[index] as any).text,
+      key: 'lyric',
+      duration: 0
+    });
+  }
+  // 组件内部事件处理
+  function handlePlayBtnClick() {
+    // 控制播放器的播放/暂停
+    isPlay
+      ? audioRef.current?.pause()
+      : audioRef.current?.play().catch(() => setIsPlay(false));
+
+    // 改变 isplay 的状态
+    setIsPlay(!isPlay);
+  }
+  // 进度条点击事件
+  function handleSliderChanged(value: number) {
+    // 获取点击位置时间
+    const currentTime = (value / 100) * duration;
+
+    //设置当前播放的时间
+    audioRef.current!.currentTime = currentTime / 1000;
+
+    setCurrentTime(currentTime);
+    setProgress(value);
+    setSlider(false);
+  }
+  // 进度条拖拽事件
+  function handleSliderChanging(value: number) {
+    // 目前是处于拖拽状态
+    setSlider(true);
+
+    // 获取value对应位置的时间
+    const currentTime = (value / 100) * duration;
+    setCurrentTime(currentTime);
+    // 设置进度条当前时间
+    setProgress(value);
+  }
+
   return (
     <PlayerBarWrapper className="sprite_playbar">
       <div className="content wrap-v2">
-        <BarControl className="control" isPlay={true}>
+        <BarControl className="control" isPlay={isPlay}>
           <button className="btn sprite_playbar prev"></button>
-          <button className="btn sprite_playbar play"></button>
+          <button
+            className="btn sprite_playbar play"
+            onClick={handlePlayBtnClick}
+          ></button>
           <button className="btn sprite_playbar next"></button>
         </BarControl>
         <BarPlayerInfo>
           <Link to="/player">
             <img
               className="image"
-              src="https://p1.music.126.net/3-PveIIWbJz9_FpZ_2Q3Ow==/109951168729156220.jpg?param=34y34"
-              alt=""
+              src={formatImageSize(currentSong?.al?.picUrl, 34)}
+              alt={currentSong?.al?.name}
             />
           </Link>
           <div className="info">
             <div className="song">
-              <span className="song-name">Φ²</span>
-              <span className="singer-name">HOYO-MiX / TetraCalyx</span>
+              <span className="song-name">{currentSong?.name}</span>
+              <span className="singer-name">
+                {currentSong?.ar?.[0]?.name} / {currentSong?.ar?.[1]?.name}
+              </span>
             </div>
             <div className="progress">
-              <Slider />
+              <Slider
+                step={0.5}
+                value={progress}
+                tooltip={{ formatter: null }}
+                onChange={handleSliderChanging}
+                onAfterChange={handleSliderChanged}
+              />
               <div className="time">
-                <span className="current">00:00</span>
+                <span className="current">{formatTime(currentTime)}</span>
                 <span className="divider">/</span>
-                <span className="duration">02:56</span>
+                <span className="duration">{formatTime(duration)}</span>
               </div>
             </div>
           </div>
@@ -59,6 +193,7 @@ const AppPlayerBar: FC<IProps> = () => {
           </div>
         </BarOperator>
       </div>
+      <audio ref={audioRef} onTimeUpdate={handleTimeUpdate}></audio>
     </PlayerBarWrapper>
   );
 };
