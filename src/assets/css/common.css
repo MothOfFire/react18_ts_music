@@ -49,6 +49,9 @@ button {
 .sprite_playlist {
   background: url(../img/playlist_sprite.png) no-repeat 0 9999px;
 }
+.sprite_footer {
+  background: url(../img/sprite_footer_03.png) no-repeat 0 9999px;
+}
 .ant-message-top {
   transform: none !important;
 }
